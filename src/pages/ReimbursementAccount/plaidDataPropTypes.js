@@ -7,9 +7,6 @@ export default PropTypes.shape({
     /** Error message */
     error: PropTypes.string,
 
-    /** Whether we should prevent the user from connecting with Plaid */
-    isPlaidDisabled: PropTypes.bool,
-
     /** List of plaid bank accounts */
     bankAccounts: PropTypes.arrayOf(PropTypes.shape({
         /** Masked account number */

@@ -29,6 +29,7 @@ import Button from '../../components/Button';
 import plaidDataPropTypes from './plaidDataPropTypes';
 import reimbursementAccountPropTypes from './reimbursementAccountPropTypes';
 import ScreenWrapper from '../../components/ScreenWrapper';
+import reimbursementAccountDraftPropTypes from './ReimbursementAccountDraftPropTypes';
 
 const propTypes = {
     /** Contains plaid data */
@@ -41,8 +42,10 @@ const propTypes = {
     plaidLinkOAuthToken: PropTypes.string,
 
     /** The bank account currently in setup */
-    /* eslint-disable-next-line react/no-unused-prop-types */
     reimbursementAccount: reimbursementAccountPropTypes.isRequired,
+
+    /** The draft values of the bank account being setup */
+    reimbursementAccountDraft: reimbursementAccountDraftPropTypes.isRequired,
 
     /** Object with various information about the user */
     user: PropTypes.shape({
@@ -59,14 +62,12 @@ const propTypes = {
 const defaultProps = {
     receivedRedirectURI: null,
     plaidLinkOAuthToken: '',
-    plaidData: {
-        isPlaidDisabled: false,
-    },
+    plaidData: {},
     user: {},
 };
 
 const BankAccountStep = (props) => {
-    let subStep = lodashGet(props, 'reimbursementAccount.achData.subStep', '');
+    let subStep = lodashGet(props.reimbursementAccount, 'achData.subStep', '');
     const shouldReinitializePlaidLink = props.plaidLinkOAuthToken && props.receivedRedirectURI && subStep !== CONST.BANK_ACCOUNT.SUBSTEP.MANUAL;
     if (shouldReinitializePlaidLink) {
         subStep = CONST.BANK_ACCOUNT.SETUP_TYPE.PLAID;
@@ -78,6 +79,7 @@ const BankAccountStep = (props) => {
         return (
             <BankAccountManualStep
                 reimbursementAccount={props.reimbursementAccount}
+                reimbursementAccountDraft={props.reimbursementAccountDraft}
                 onBackButtonPress={props.onBackButtonPress}
             />
         );
@@ -87,6 +89,7 @@ const BankAccountStep = (props) => {
         return (
             <BankAccountPlaidStep
                 reimbursementAccount={props.reimbursementAccount}
+                reimbursementAccountDraft={props.reimbursementAccountDraft}
                 onBackButtonPress={props.onBackButtonPress}
             />
         );
@@ -126,7 +129,7 @@ const BankAccountStep = (props) => {
                                 BankAccounts.clearPlaid();
                                 BankAccounts.setBankAccountSubStep(CONST.BANK_ACCOUNT.SETUP_TYPE.PLAID);
                             }}
-                            disabled={props.plaidData.isPlaidDisabled || !props.user.validated}
+                            disabled={props.isPlaidDisabled || !props.user.validated}
                             style={[styles.mt4]}
                             iconStyles={[styles.buttonCTAIcon]}
                             shouldShowRightIcon
@@ -192,6 +195,9 @@ export default compose(
         },
         plaidData: {
             key: ONYXKEYS.PLAID_DATA,
+        },
+        isPlaidDisabled: {
+            key: ONYXKEYS.IS_PLAID_DISABLED,
         },
     }),
 )(BankAccountStep);

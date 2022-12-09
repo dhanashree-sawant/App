@@ -22,9 +22,13 @@ import Button from '../components/Button';
 import FixedFooter from '../components/FixedFooter';
 import Form from '../components/Form';
 import ROUTES from '../ROUTES';
+import plaidDataPropTypes from "./ReimbursementAccount/plaidDataPropTypes";
 
 const propTypes = {
     ...withLocalizePropTypes,
+
+    /** Contains plaid data */
+    plaidData: plaidDataPropTypes,
 
     /** The details about the Personal bank account we are adding saved in Onyx */
     personalBankAccount: PropTypes.shape({
@@ -43,6 +47,13 @@ const propTypes = {
 };
 
 const defaultProps = {
+    plaidData: {
+        bankName: '',
+        plaidAccessToken: '',
+        bankAccounts: [],
+        isLoading: false,
+        error: '',
+    },
     personalBankAccount: {
         error: '',
         shouldShowSuccess: false,
@@ -138,6 +149,7 @@ class AddPersonalBankAccountPage extends React.Component {
                                 onSelect={(selectedPlaidAccountID) => {
                                     this.setState({selectedPlaidAccountID});
                                 }}
+                                plaidData={this.props.plaidData}
                                 onExitPlaid={Navigation.goBack}
                                 receivedRedirectURI={getPlaidOAuthReceivedRedirectURI()}
                                 selectedPlaidAccountID={this.state.selectedPlaidAccountID}
