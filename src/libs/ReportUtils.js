@@ -1015,7 +1015,12 @@ function buildOptimisticWorkspaceChats(policyID, policyName) {
 function isUnread(report) {
     const lastReadSequenceNumber = report.lastReadSequenceNumber || 0;
     const maxSequenceNumber = report.maxSequenceNumber || 0;
-    return lastReadSequenceNumber < maxSequenceNumber;
+    if(report.lastActorEmail==currentUserEmail){
+        return false;
+    }
+    else{
+        return lastReadSequenceNumber < maxSequenceNumber;
+    }
 }
 
 /**
